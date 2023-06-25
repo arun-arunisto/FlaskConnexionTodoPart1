@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: "Restful Flask API"
+  description: "An API to add TODO"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  schemas:
+    Todo:
+      type: "object"
+      required:
+        - content
+      properties:
+        action:
+          type: "string"
+        content:
+          type: "string"
+  parameters:
+    content:
+      name: "content"
+      description: "Todo item to get"
+      in: path
+      required: True
+      schema:
+        type: "string"
+
+paths:
+  /todo:
+    get:
+      operationId: "todo.read_all"
+      tags:
+        - "Todo"
+      summary: "Reading all Todos"
+      responses:
+        "200":
+          description: "Successfully read the Todo"
+    post:
+      operationId: "todo.create"
+      tags:
+        - Todo
+      summary: "Create a todo"
+      requestBody:
+        description: "Todo to create"
+        required: True
+        content:
+          application/json:
+            schema:
+              x-body-name: "todo"
+              $ref: "#/components/schemas/Todo"
+      responses:
+        "201":
+          description: "Successfully created Todo"
+  /todo/{content}:
+    get:
+      operationId: "todo.read_one"
+      tags:
+        - Todo
+      summary: "Read one todo"
+      parameters:
+        - $ref: "#/components/parameters/content"
+      responses:
+        "200":
+          description: "Successfully read todo"
+    put:
+      tags:
+        - Todo
+      operationId: "todo.update"
+      summary: "Update todo"
+      parameters:
+        - $ref: "#/components/parameters/content"
+      responses:
+        "200":
+          description: "Successfully updated todo"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "todo"
+              $ref: "#/components/schemas/Todo"
+    delete:
+      tags:
+        - Todo
+      operationId: "todo.delete"
+      summary: "Delete Todo"
+      parameters:
+        - $ref: "#/components/parameters/content"
+      responses:
+        "204":
+          description: "Successfully deleted Todo"
